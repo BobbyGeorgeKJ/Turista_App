@@ -1,118 +1,73 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import Icon from "react-native-vector-icons/FontAwesome";
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const ActivityLifestyle = ({ route, navigation }: any) => {
+  // Uncomment the following line when you want to use the backend parameters
+  // const { username, phone_number, password, DOB, gender, height, weight, diet, email } = route.params;
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  const [activity, setActivity] = useState('Moderate');
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+  const activityLevels = ['Sedentary', 'Moderate', 'Active'];
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const navigateNext = async () => {
+    navigation.navigate('StepCounterPage', {
+      // Uncomment these lines when backend integration is required
+      // username: username,
+      // phone_number: phone_number,
+      // email: email,
+      // password: password,
+      // gender: gender,
+      // DOB: DOB,
+      // height: height,
+      // weight: weight,
+      // diet: diet,
+      experience: activity, // Keep this for the activity level
+    });
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>How active are you in your daily lifestyle?</Text>
+      <View style={styles.buttonContainer}>
+        {activityLevels.map((level) => (
+          <TouchableOpacity
+            key={level}
+            style={[styles.optionButton, activity === level && styles.selectedOption]}
+            onPress={() => setActivity(level)}
+          >
+            <Text style={[styles.buttonText, activity === level && styles.selectedText]}>{level}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", margin: 10, marginTop: 100 }}>
+        <TouchableOpacity style={styles.nextButton} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={24} color="#FFF" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.nextButton} onPress={navigateNext}>
+          <Icon name="arrow-right" size={24} color="#FFF" />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
-}
+};
+
+export default ActivityLifestyle;
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  container: { flex: 1, backgroundColor: '#000', padding: 20 },
+  title: { fontSize: 20, color: '#FFF', textAlign: 'center', marginVertical: 20 },
+  buttonContainer: { flexDirection: 'row', justifyContent: 'space-around' },
+  optionButton: { backgroundColor: '#333', padding: 15, borderRadius: 8, width: '30%', alignItems: 'center' },
+  selectedOption: { backgroundColor: '#F0A500' },
+  buttonText: { color: '#FFF' },
+  selectedText: { color: '#000', fontWeight: 'bold' },
+  nextButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#FF8C00",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
-
-export default App;
